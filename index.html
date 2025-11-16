@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Portfolio | Popantha Dev</title>
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Shrikhand&display=swap');
+
+  :root {
+    --cute-pink: #F9A8D4;
+    --cute-purple: #C4B5FD;
+  }
+
+  html,body { height:100%; margin:0; font-family:Inter,system-ui,Arial; }
+
+  body {
+    background: #000;
+    color: white;
+    overflow: hidden;
+    /* CUSTOM CURSOR: uses your provided GIF (fallback to auto) */
+    cursor: url('asset/mouse.gif') 16 16, auto;
+  }
+
+  /* BACKGROUND VIDEO */
+  #video-background {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    filter: brightness(0.75);
+  }
+
+  /* overlay behind content for contrast */
+  #content-overlay::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 0;
+  }
+
+  /* ENTER FULL-SCREEN CLICKABLE OVERLAY */
+  #enter-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, rgba(0,0,0,0.85), rgba(0,0,0,0.7));
+    backdrop-filter: blur(6px);
+    transition: opacity .35s ease, visibility .35s;
+    cursor: pointer; /* ensures pointer style on overlay too */
+  }
+
+  #enter-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  /* Enter message styling */
+  .enter-card {
+    text-align: center;
+    padding: 2rem 2.5rem;
+    border-radius: 18px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.04);
+    color: #fff;
+  }
+
+  .enter-title {
+    font-family: 'Shrikhand', cursive;
+    font-size: 2.4rem;
+    letter-spacing: .6px;
+    margin-bottom: .5rem;
+    color: var(--cute-pink);
+  }
+
+  .enter-sub {
+    font-size: 1rem;
+    color: #f3f3f3;
+    opacity: .95;
+  }
+
+  .pulse {
+    animation: pulse 1.6s infinite ease-in-out;
+  }
+  @keyframes pulse {
+    0% { transform: scale(1); opacity:1; }
+    50% { transform: scale(1.04); opacity:.95; }
+    100% { transform: scale(1); opacity:1; }
+  }
+
+  /* Profile card - adapted from your design */
+  #profile-content { z-index: 10; position: relative; display:flex; align-items:center; justify-content:center; min-height:100vh; padding:1rem; }
+  .profile-card {
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(14px);
+    border-radius: 24px;
+    padding: 2.5rem 1.5rem;
+    text-align:center;
+    max-width:940px;
+    width:520px;
+    box-shadow: 0 0 50px rgba(249,168,212,0.15), inset 0 0 20px rgba(255,255,255,0.03);
+  }
+  .cute-glow-text {
+    text-shadow: 0 0 10px #fff, 0 0 30px var(--cute-pink), 0 0 50px var(--cute-purple);
+    animation: cute-bounce 3s infinite ease-in-out;
+  }
+  @keyframes cute-bounce { 0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)} }
+
+  /* Volume button */
+  #volume-toggle { transition: .2s; }
+  #volume-toggle:hover { transform: translateY(-3px) scale(1.03); }
+
+  /* small responsive tweaks */
+  @media (max-width:640px) {
+    .enter-card { padding:1.2rem 1.6rem; }
+    .enter-title { font-size:1.8rem; }
+  }
+</style>
+</head>
+
+<body>
+
+  <!-- BACKGROUND VIDEO: start MUTED to avoid black-screen/autoplay block -->
+  <video id="video-background" autoplay loop playsinline muted preload="auto">
+    <source src="asset/video.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- VOLUME BUTTON (optional) -->
+  <button id="volume-toggle" aria-label="Toggle volume"
+    class="fixed top-5 right-5 z-30 p-3 rounded-full bg-white/10 backdrop-blur-sm text-xl text-white">
+    <i id="volume-icon" class="fa-solid fa-volume-xmark"></i>
+  </button>
+
+  <!-- CLICK-ANYWHERE ENTER OVERLAY -->
+  <div id="enter-screen" role="button" aria-label="Click anywhere to enter and enable sound" tabindex="0">
+    <div class="enter-card">
+      <div class="enter-title pulse">POPANTHA VIBE</div>
+      <div class="enter-sub">Click anywhere on the screen to enter🎵</div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT (hidden under overlay until enter) -->
+  <div id="content-overlay">
+    <div id="profile-content">
+      <div class="profile-card">
+        <img id="profile-img" src="asset/logo.gif" alt="Cute Logo" class="w-44 h-44 object-cover rounded-full mx-auto mb-6 shadow-xl"
+             onerror="this.onerror=null;this.src='https://placehold.co/150x150/EC4899/FBCFE8/png?text=CAT';">
+
+        <h1 class="text-5xl sm:text-6xl md:text-7xl font-black text-white cute-glow-text mb-2 tracking-wide uppercase">MR.POPA</h1>
+        <p class="text-xl sm:text-2xl text-pink-300 font-mono uppercase mb-6">Vibe Developer | Dreaming Protocol 💖</p>
+
+        <div class="flex justify-center items-center flex-wrap gap-3 mb-8 mt-6">
+          <span class="inline-flex items-center px-3 py-1 text-xs sm:text-sm font-semibold rounded-full bg-blue-600 text-white shadow-lg">
+            <i class="fa-solid fa-code mr-2 text-base"></i> FULL STACK DEVELOPER
+          </span>
+          <span class="inline-flex items-center px-3 py-1 text-xs sm:text-sm font-semibold rounded-full bg-emerald-600 text-white shadow-lg">
+            <i class="fa-solid fa-network-wired mr-2 text-base"></i> API ARCHITECT
+          </span>
+          <span class="inline-flex items-center px-3 py-1 text-xs sm:text-sm font-semibold rounded-full bg-gray-700 text-white shadow-lg">
+            <i class="fa-solid fa-palette mr-2 text-base"></i> UI/UX DESIGNER
+          </span>
+        </div>
+
+        <p class="text-lg sm:text-xl text-pink-300 font-mono font-semibold">
+          <i class="fa-solid fa-cloud mr-2 text-pink-400"></i> Location: Dreamland
+        </p>
+
+<!-- REPLACE the old div (with Access text) in your profile-card with this -->
+<div class="space-y-3 mt-8 pt-4 border-t border-gray-700/50 flex flex-col items-center">
+  
+  <!-- Social icons container -->
+  <div class="flex gap-4">
+    <!-- Discord -->
+    <a href="https://discord.gg/mebgR6RD" target="_blank" class="text-white hover:text-blue-500 text-2xl transition transform hover:-translate-y-1">
+      <i class="fab fa-discord"></i>
+    </a>
+
+    <!-- WhatsApp -->
+    <a href="https://wa.me/+94740807947" target="_blank" class="text-white hover:text-green-500 text-2xl transition transform hover:-translate-y-1">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- YouTube -->
+    <a href="https://www.youtube.com/popantha" target="_blank" class="text-white hover:text-red-500 text-2xl transition transform hover:-translate-y-1">
+      <i class="fab fa-youtube"></i>
+    </a>
+  </div>
+
+  <p class="text-sm font-bold text-gray-300 flex items-center justify-center font-mono mt-2">
+    <i class="fa-solid fa-code mr-2 text-pink-400 animate-pulse"></i> Coded with Love by 
+    <span class="ml-1 text-base font-bold tracking-wider" style="font-family:'Shrikhand', cursive; color:#F9A8D4;">POPANTHA</span>
+  </p>
+</div>
+
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Elements
+  const video = document.getElementById('video-background');
+  const enterScreen = document.getElementById('enter-screen');
+  const volumeToggle = document.getElementById('volume-toggle');
+  const volumeIcon = document.getElementById('volume-icon');
+
+  // Start state: MUST start muted to avoid autoplay block/black screen
+  let isMuted = true;
+  video.muted = true;
+  video.volume = 1;
+
+  // Click-anywhere handler (only once)
+  function enterHandler(e) {
+    // Unmute and play (attempt)
+    try {
+      video.muted = false;
+      isMuted = false;
+      video.play().catch(err => {
+        // sometimes play might still be blocked; still set icon and allow user to toggle
+        console.warn('Play with sound blocked:', err);
+      });
+    } catch (err) {
+      console.warn('Error while trying to unmute/play', err);
+    }
+
+    // update icon
+    volumeIcon.className = 'fa-solid fa-volume-high';
+
+    // hide overlay smoothly
+    enterScreen.classList.add('hidden');
+  }
+
+  // Attach click (works for mouse and touch). once:true ensures it fires only first time.
+  enterScreen.addEventListener('click', enterHandler, { once: true, passive: true });
+
+  // Also allow clicking anywhere on the page (in case overlay disappears early)
+  document.addEventListener('click', function globalClick(e) {
+    if (!enterScreen.classList.contains('hidden')) {
+      enterHandler();
+      document.removeEventListener('click', globalClick);
+    } else {
+      document.removeEventListener('click', globalClick);
+    }
+  }, { passive: true });
+
+  // Accessibility: allow Enter/Space to trigger overlay
+  enterScreen.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      enterHandler();
+    }
+  });
+
+  // Volume toggle button (manual toggle after enter)
+  volumeToggle.addEventListener('click', (ev) => {
+    ev.stopPropagation(); // avoid triggering page-enter
+    isMuted = !isMuted;
+    video.muted = isMuted;
+    volumeIcon.className = isMuted ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high';
+    if (!isMuted) {
+      video.play().catch(() => {});
+    }
+  });
+</script>
+
+</body>
+</html>
